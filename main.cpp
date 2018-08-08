@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstdlib>
-#include <cassert>
 #include <iomanip>
 #include <fstream>
 
@@ -35,7 +34,7 @@ void instrucoes();
 void instrucoes_Update();
 
 template< typename Any_type>
-void Trabalho_update(Any_type &valor_legado, Any_type &new_val)
+void Trabalho_update(Any_type *valor_legado, Any_type *new_val)
 {
     valor_legado = new_val;
     cout << "Valores Alterados com sucesso" << endl;
@@ -181,6 +180,7 @@ const char *lerArquivo()
 {
     ifstream inPutReader("outTest.dat", ios::binary);
     Trabalho t;
+    int Trabalhos_Pendentes = 0;
 
     if(!inPutReader){
         const char * const message_failure = "Arquivo impossibilitado ou inexistente\n";
@@ -189,12 +189,15 @@ const char *lerArquivo()
     inPutReader.read(reinterpret_cast<char *>(&t), sizeof(Trabalho));
 
     while(inPutReader && !inPutReader.eof()){
-        if(t.numTrab != 0)
+        if(t.numTrab != 0){
             printArquivo(t);
+            ++Trabalhos_Pendentes;
+        }
 
         inPutReader.read(reinterpret_cast<char *>(&t), sizeof(Trabalho));
 
     }
+    cout << "\nNumero de trabalhos pendentes: " << Trabalhos_Pendentes << endl;
 }
 
 void printArquivo(Trabalho &trabRef)
@@ -268,24 +271,39 @@ const char *atualizar_arquivo()
     case DIA:
         int update_dia;
         cin >> update_dia;
-        Trabalho_update(t.dia, update_dia);
+        Trabalho_update(&t.dia, &update_dia);
         break;
 
     case MES:
         int update_mes;
         cin >> update_mes;
-        Trabalho_update(t.mes, update_mes);
+        Trabalho_update(&t.mes, &update_mes);
         break;
 
     case ANO:
         int update_ano;
         cin >> update_ano;
-        Trabalho_update(t.ano, update_ano);
+        Trabalho_update(&t.ano, &update_ano);
 
     case ABNT:
         int update_abnt;
         cin >> update_abnt;
-        Trabalho_update(t.abnt, update_abnt);
+        Trabalho_update(&t.abnt, &update_abnt);
+        break;
+    case NOME_TRAB:
+        char update_NT[75];
+        cin >> update_NT;
+        Trabalho_update(t.nome_do_trabalho, update_NT);
+        break;
+    case NOME_MAT:
+        char update_NM[75];
+        cin >> update_NM;
+        Trabalho_update(t.nome_da_materia, update_NM);
+        break;
+    case COMPLEMENTO:
+        char update_complemento[200];
+        cin >> update_complemento;
+        Trabalho_update(t.complemento, update_complemento);
         break;
 
     default:

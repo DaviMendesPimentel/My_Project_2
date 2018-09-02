@@ -5,7 +5,7 @@ class Trab_ClassDef
 {
     public:
         //Funções controladoras
-        Trab_ClassDef(int = 101, int = 0, int = 0, int = 0, int = 0,
+        Trab_ClassDef(int = 0, int = 0, int = 0, int = 0, int = 0,
                       char * = '\0', char * = '\0', char * = '\0');    //construtor default
 
         void criarTrabalho();    //inicializa um Trabalho

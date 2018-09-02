@@ -232,7 +232,7 @@ bool Trab_ClassDef::verify()
         const char * message_failure = "Arquivo impossibilitado ou inexistente\n";
         throw message_failure;  //se o arquivo falhou na abertura, dispara uma exceção
     }
-    Input_file.seekg((t.num_trab - 1) * sizeof(Trab_ClassDef));  //direcionando o ponteiro de leitura
+    Input_file.seekg((this->num_trab - 1) * sizeof(Trab_ClassDef));  //direcionando o ponteiro de leitura
 
     Input_file.read(reinterpret_cast<char *>(&t), sizeof(Trab_ClassDef)); //lendo dados e transferindo-os
                                                                         //para o objeto "t"

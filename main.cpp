@@ -2,10 +2,11 @@
 #include <cstdlib>
 #include <iomanip>
 #include <fstream>
-#include "Trab_ClassDef.h"
+#include "Trab_ClassDef.cpp"
 #include <locale.h>
 
 using namespace std;
+
 
 // estrutura enum para controle de entrada
 enum escolha{ CRIAR = 1, LER, APAGAR, ATUALIZAR, FINALIZAR_PROGRAMA };
@@ -21,7 +22,6 @@ int main()
 
     try{	// tentará executar este código
         cout << "Bem vindo ao meu programa:" << endl;
-        cout << "Função \"lerArquivo\" chamada: " << endl;
         int i;	// cria um iterador
         cout << '\n';	// executa uma quebra de linha
         for(i = 0; i < 80; i++)	// itera até que o prompt seja preenchido

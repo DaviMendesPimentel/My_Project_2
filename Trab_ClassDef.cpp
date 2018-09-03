@@ -1,4 +1,9 @@
 #include "Trab_ClassDef.h"
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+
+using namespace std;
 
 template< typename Any_type>
 void Trabalho_update(Any_type *valor_legado, Any_type *new_val)
@@ -14,16 +19,15 @@ void Trabalho_update(Any_type *valor_legado, Any_type *new_val)
 
 Trab_ClassDef::Trab_ClassDef(int num_T, int d, int m, int a, int norma,
                             char * nome_T, char * nome_M, char * comp)
-                            //definicão do construtor default
 {
-    num_trab = ((num_T >= 1 && num_T <= 100) ? num_T : 101);
+    num_trab = ((num_T >= 1 && num_T <= 100) ? num_T : 0);
     dia = ((d >= 1 && d <= 31) ? d : 1);
     mes = ((m >= 1 && m <= 12) ? m : 1);
     ano = (a >= 2018 ? a : 2018);
     abnt = (norma != 0 ? 1 : 0);
-    nome_do_trabalho = nome_T;
-    nome_da_materia = nome_M;
-    complemento = comp;
+    nome_do_trabalho[75] = *nome_T;
+    nome_da_materia[75] = *nome_M;
+    complemento[200] = *comp;
 }
 
 void Trab_ClassDef::atualizarTrabalho()
@@ -45,7 +49,7 @@ void Trab_ClassDef::atualizarTrabalho()
         throw message_failure;  //se o arquivo não foi aberto com sucesso, dispara uma exceção
     }
     Trab_ClassDef t;    //cria um objeto default de Trab_ClassDef
-    Arquivo_entrada.seekg(number_Trab * sizeof(Trab_ClassDef)); //direciona o ponteiro de leitura
+    Arquivo_entrada.seekg(this->num_trab * sizeof(Trab_ClassDef)); //direciona o ponteiro de leitura
     Arquivo_entrada.read(reinterpret_cast<char *>(&t), sizeof(Trab_ClassDef));  //lê os dados do arquivo
 
     invalid_valor:  //referência para goto para um valor inválido
@@ -156,7 +160,7 @@ void Trab_ClassDef::lerArquivo()
     inPutReader.read(reinterpret_cast<char *>(&t), sizeof(Trab_ClassDef)); //lê o arquivo desde o início
                                                                     //lembrando que não foi utilizado o seekg()
     while(inPutReader && !inPutReader.eof()){   //verifica se o arquivo não chegou ao fim
-        if(t.numTrab != 0){         //verifica se o numero do trabalho é diferente de 0
+        if(t.num_trab != 0){         //verifica se o numero do trabalho é diferente de 0
             this->printTrabalho(t); //se o numero do trabalho for diferente de 0, imprime os dados desse trabalho
             ++Trabalhos_Pendentes;  //incrementa o valor de Trabalhos_Pendentes
         }
@@ -202,6 +206,7 @@ void Trab_ClassDef::funcaoAmzData()
         cout << message_sucess; //exibe uma mensagem de validez de número - mensagem de sucesso
 
     cout << "\n\nNome do Trabalho: ";   //pede o nome do trabalho
+    cin.ignore();
     cin.getline(nome_do_trabalho, 75);  //lê o nome do trabalho
 
     cout << "Nome da Matéria: ";        //pede o nome da materia
@@ -210,9 +215,9 @@ void Trab_ClassDef::funcaoAmzData()
     cout << "Data de entrega: ";        //pede a data de entrega
     cout << "Dia: ";                    //pede o dia de entrega
     cin >> setw(2) >> dia;              //lê apenas dois dígitos e armazena-os em "dia"
-    cout << setw(17) << "Mês: ";        //pede o mes de entrega
+    cout << setw(22) << "Mês: ";        //pede o mes de entrega
     cin >> setw(2) >>mes;               //lê apenas dois dígitos e armazena-os em "mes"
-    cout << setw(17) << "Ano: ";        //pede o ano de entrega
+    cout << setw(22) << "Ano: ";        //pede o ano de entrega
     cin >> setw(4) >> ano;              //lê quatro dígitos e armazena-os em "ano"
     cout << "\n\nABNT? (0 para \"falso\" e \nqualquer outro valor para \"true\": "; //instrui o usuário sobre ABNT
     cin >> abnt;                        //lê um valor e armazena-os em "abnt"
@@ -237,7 +242,7 @@ bool Trab_ClassDef::verify()
     Input_file.read(reinterpret_cast<char *>(&t), sizeof(Trab_ClassDef)); //lendo dados e transferindo-os
                                                                         //para o objeto "t"
 
-    if(t.numTrab != 0 && t.numTrab == this->num_trab) //verifica se o numero do trabalho é valido
+    if(t.num_trab != 0 && t.num_trab == this->num_trab) //verifica se o numero do trabalho é valido
         return true;        //se o numero for inválido (i.e.,se o número ja existir) retorna true
 
     return false; //se não, retorna false
@@ -249,12 +254,12 @@ void Trab_ClassDef::printTrabalho(Trab_ClassDef &tRef)
     int i;
     cout << "\n";
 
-    cout << "\nNum. do Trabalho: " << tRef.numTrab << '\n';
-    cout << "Trabalho: " << tRef.nome_do_trabalho
-         << ios::right << "\nData de entrega: "
+    cout << "\nNum. do Trabalho: " << tRef.num_trab
+         << ios::right << "Data de entrega: "
          << (tRef.dia < 10 ? "0" : "") << tRef.dia << "/"
          << (tRef.mes < 10 ? "0" : "") << tRef.mes << "/"
-         << tRef.ano << endl
+         << tRef.ano << endl;
+    cout << "Trabalho: " << tRef.nome_do_trabalho
          << "\nMatéria: " << tRef.nome_da_materia << "\n\n"
          << "Complemento: \n" << tRef.complemento << "\n"
          << setw(15) << "ABNT: " << (tRef.abnt != 0 ? "sim" : "não") << endl;
@@ -266,7 +271,7 @@ void Trab_ClassDef::printTrabalho(Trab_ClassDef &tRef)
 }
 
 //função utilitária instrucoes():
-void Trab_ClassDef::instrucoes()
+inline void Trab_ClassDef::instrucoes()
 {
     cout << "1 - criar trabalho\n"
          << "2 - ler trabalho\n"

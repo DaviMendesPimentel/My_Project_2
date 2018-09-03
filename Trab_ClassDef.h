@@ -6,7 +6,7 @@ class Trab_ClassDef
     public:
         //Funções controladoras
         Trab_ClassDef(int = 0, int = 0, int = 0, int = 0, int = 0,
-                      char * = '\0', char * = '\0', char * = '\0');    //construtor default
+                      char * = "", char * = "", char * = "");    //construtor default
 
         void criarTrabalho();    //inicializa um Trabalho
         void lerArquivo();       //lê o arquivo por completo
